@@ -1,0 +1,36 @@
+FONTLOG for the LilyJAZZ font
+=============================
+
+This file provides detailed information on the LilyJAZZ font software. This information should be distributed along with the LilyJAZZ fonts and any derivative works.
+
+
+Basic font information
+----------------------
+LilyJAZZ is a typeface designed by Torsten Hämmerle to resemble a hand-written font more suitable to jazz-like hand-written scores. Since Torsten is no longer available to publicly maintain LilyJAZZ, Abraham Lee has become the current designer and maintainer for the forseeable future. This font software is not designed for use in a word-processing application, although all the glyphs may be accessed at their respective Unicode points. It was originally designed for use with LilyPond, the automatic music engraver.
+
+More information about the introduction of LilyJAZZ to the general LilyPond user base can be found at:
+
+http://lists.gnu.org/archive/html/lilypond-user/2013-03/msg00608.html
+
+More information about LilyPond can be found at:
+
+http://www.lilypond.org/
+
+Changelog
+---------
+
+12 March 2013 (Torsten Hämmerle) LilyJAZZ version 0.1
+- Initial design of most common notation glyphs. Not yet compatible with
+  LilyPond proper, except through manual overrides within scores.
+
+30 July 2014 (Abraham Lee) LilyJAZZ version 1.0
+- Finished the complete set of "classical" notation glyphs designs. Updated 
+  the font structure to be compatible with LilyPond 2.18.2.
+  
+25 October 2014 (Abraham Lee) LilyJAZZ version 1.0
+- Added WOFF font file support and added piano brace font in OTF, SVG, and WOFF formats
+
+20 January 2015 (Abraham Lee) LilyJAZZ version 1.1
+- Fixed open contour artifacts in some glyphs
+
+
