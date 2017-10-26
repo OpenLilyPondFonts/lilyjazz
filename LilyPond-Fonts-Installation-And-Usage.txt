@@ -1,0 +1,153 @@
+MUSIC TYPE FOUNDRY - LILYPOND INSTALLATION INSTRUCTIONS
+
+*** PLEASE READ ALL OF THE INSTRUCTIONS BELOW ***
+
+1. INTRODUCTION
+===============
+
+One of the incredible benefits of LilyPond is that it is designed to use optically scaled fonts. LilyPond comes with 8 music notation font weights, like "emmentaler-20". The font name indicates the approximate staff height they were designed for (e.g., "emmentaler-20" was designed for 20pt staff height). The sizes it comes with are 11, 13, 14, 16, 18, 20, 23, and 26. LilyPond also comes with a grand staff brace font whose name ends in "-brace". This font contains 576 individually sized piano brace glyphs "{". 
+
+* NOTICE: THE FILES IN THIS DOWNLOAD ARE NOT OPTICALLY SCALED. Since the mechanism for loading the music/brace fonts expects these suffixes as part of the file name, the font files in this download have similar suffixes in their names even though the alternative fonts in this download do not have unique optical weights (i.e., the files ending in '-XX' are all technically identical). Each font comes with a specially designed "-brace" which is fully designed to work at all 576 sizes.
+
+Version Support
+---------------
+
+Using alternative music fonts in LilyPond is different from other apps on your computer. Rather than put the fonts in the "normal" system font directory, please follow the instructions below to get up and running quickly. If your installed version is at least 2.19.12, which is the first development build to natively support alternative fonts, continue to section 2 for more details. If your installed version is between 2.18.0 and 2.19.11, then please refer to section 3 for additional instructions. Any version prior to 2.18.0 is untested.
+
+* NOTE: Since LilyPond versions tend to get installed side by side, you may need to repeat the process below for any new versions installed on your system for the fonts to continue to work successfully.
+
+2. INSTALLATION (v.2.19.12+)
+============================
+
+There are 3 kinds of font files included in your download: 
+ - .OTF (required for PDF output)
+ - .SVG (required for SVG output)
+ - .WOFF (useful for display in a web-browser, but usually not needed)
+
+As was stated previously, these DON'T go in the normal system fonts folder. The installation directory depends on your OS and will likely be in one of the following locations (if the default directory is chosen):
+
+GNU/Linux
+-----------
+ - If downloaded from lilypond.org: 
+    "INSTALLDIR/lilypond/usr/share/lilypond/current/"
+ - If downloaded with a package manager:
+    "PREFIX/share/lilypond/X.Y.Z"
+    
+where PREFIX is set by your package manager or "configure" script and "X.Y.Z" is the version you have installed.
+
+Mac OSX
+-------
+  "INSTALLDIR/LilyPond.app/Contents/Resources/share/lilypond/current"
+
+Windows
+-------
+  "INSTALLDIR/LilyPond/usr/share/lilypond/current"
+
+In this folder you should see the following sub-folders:
+ - fonts
+ - ly
+ - ps
+ - python
+ - scm
+ - tex
+ - vim
+
+The "fonts" folder has two sub-folders called "otf" and "svg". The fonts files with the .OTF extension go into the "otf" folder and those with the .SVG and .WOFF extensions go in the "svg" folder. The LilyPond installation comes with the Emmentaler font family as well as some text fonts in serif ("roman"), sans-serif ("sans"), and monospace ("typewriter") styles.
+
+Once the downloaded fonts are placed in these folders, proceed to section 4 for a quick overview on how to USE the fonts.
+
+
+3. INSTALLATION (v2.18.0 - 2.19.11)
+===================================
+
+If you are not yet able to upgrade to the latest developmental version of LilyPond, you can still have these features. It's still quite easy to install and use and is known to work well in the 2.18 stable series of LilyPond and later. 
+
+* NOTE: It may not work at all in previous versions. Sorry. We can only support so many versions.
+
+The first thing you need to do is install a patched file called "font.scm", which is also included with the fonts you've downloaded. This file contains the commands that allow you to use the fonts in a more flexible way. These same commands are present in all versions 2.19.12+. Installation of this file may require administrator rights.
+
+In the previous section (2), it shows where to find needed folders in your installation of LilyPond. In the "scm" directory you will find a file by the same name "font.scm". REPLACE THIS FILE WITH THE PATCHED VERSION INCLUDED WITH THIS DOWNLOAD. Just in case, you may want to just rename the old one so you can revert to it in the case that something isn't working correctly (though this is highly unlikely).
+
+Once the patched "font.scm" has been installed proceed to section 4 for a quick overview on how to USE the fonts.
+
+
+4. HOW TO USE THE FONTS
+=======================
+
+Before LilyPond 2.19.12, switching the music font was a challenge to do and required some fancy coding and file manipulation to get working correctly. From 2.19.12 on, music font switching is an integral part of LilyPond and is as easy as choosing a text font. To switch the music font, you need to use the "set-global-fonts" command within a \paper block  your .ly input file, like the following example:
+
+\paper {
+  #(define fonts
+    (set-global-fonts
+      #:music "emmentaler"
+      #:brace "emmentaler"
+      #:roman "Bodoni"
+      #:sans "Helvetica"
+      #:typewriter "Consolas"
+      #:factor (/ staff-height pt 20)
+  ))
+}
+
+The "set-global-fonts" function uses keyword arguments that start with "#:". This makes all the arguments optional, using the defaults when unspecified. In other words, if you are happy with the default choices of any of the arguments, just leave that line out. 
+
+Another example. Let's say that we want to use the MTF-Haydn music font and the default Emmentaler brace font. Let's also change the roman (or serif) font to Libre Baskerville. We can then trim down the above snippet to be just:
+
+\paper {
+  #(define fonts
+    (set-global-fonts
+      #:music "mtf-haydn"
+      #:roman "Libre Baskerville"
+  ))
+}
+
+Usage Notes
+-----------
+
+For technical reasons, the names used with the "#:music" and "#:brace" should be LOWER CASE and NOT include the size/brace indicator part of the file name. So, if I wanted to use the MTF-Haydn font at 16pt size, I would do the following:
+
+#(set-global-staff-size 16)  % this MUST go PRIOR to defining the fonts!!!
+
+\paper {
+  #(define fonts
+    (set-global-fonts
+      #:music "mtf-haydn"  ; not "mtf-haydn-16"
+      #:brace "mtf-haydn"  ; not "mtf-haydn-brace"
+      #:factor (/ staff-height pt 20)
+  ))
+}
+
+Notice that the "-16" and "-brace" parts of the file name are unnecessary since LilyPond automatically handles the font file selection.
+
+The TEXT font names should be just as your font manager displays them, which may include UPPER and LOWER CASE letters and spaces.
+
+The "#:factor" argument controls the font size, relative to the staff-height. If your staff-height is NOT the default 20pt, then you should change the staff-height PRIOR to setting the fonts using "#(set-global-staff-size XX)" where XX is in units of pts (default is 20). If you are unsure about what value to use here, just use 
+
+#:factor (/ staff-height pt 20)
+
+like the example above and the music and brace fonts will always be scaled correctly.
+
+
+5. FONT STYLESHEET
+==================
+
+To make using the music fonts more convenient, we can put the above-referenced \paper blocks in a separate file where they can be referenced via a simple \include statement. To give you an idea of what you can do, a basic stylesheet file ("FONTNAME.ily") has been included with this download package. Some of our stylesheets have more layout overrides than others (i.e., making slurs thicker, etc.), but they are really suggestions and can be customized to suit your tastes.
+
+These stylesheets need not be in the same folder as the normal input files. Rather, they can be placed together in a single directory and then you can tell LilyPond where to find it. That way you can just add, for example, 
+
+\include "mtf-cadence.ily" 
+
+near the top of your input .ly file and the rest is done for you. Pretty simple. 
+
+Here are a few ways to include this directory so that LilyPond knows where to find it (let's call this directory "stylesheets"):
+
+ - Frescobaldi - Open up the preferences with "Edit" -> "Preferences". Then, under the section "LilyPond Preferences" you will find a sub-section called "LilyPond include path:". Click "Add" and browse to the "stylesheets" directory.
+ - Command-line - Simply add the option --include="full/path/to/stylesheets" to add "stylesheets" to LilyPond's search path.
+ - Relative-includes - See the LilyPond documentation about other ways to include files in other folders.
+
+NOTE: On each font's product page, the example scores use the included stylesheet. 
+
+
+6. SUPPORT
+==========
+
+If you have any questions about these instructions or if something needs to be corrected (that happens), please contact Abraham at info@musictypefoundry.com.
