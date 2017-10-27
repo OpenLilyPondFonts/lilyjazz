@@ -40,3 +40,8 @@ Changelog
 
 20 January 2015 (Abraham Lee) LilyJAZZ version 1.1
 - Fixed open contour artifacts in some glyphs
+
+13 October 2017 (Abraham Lee) LilyJAZZ version 2.0
+- Added/removed glyphs in font files, reduces file size
+- Included instructions and sample style sheets
+
